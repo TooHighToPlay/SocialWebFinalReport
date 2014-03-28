@@ -1,0 +1,8 @@
+# Tex produced files
+*.aux
+*.bbl
+*.blg
+*.log
+
+# Mac files
+.DS_Store
