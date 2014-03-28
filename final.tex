@@ -53,6 +53,35 @@ All the mentioned data sources and others (detailed in the Analysis section) get
 
 In order to give the user an approximation about the impact of the story they are skimming, we use Sentiment140\footnote{http://www.sentiment140.com/} to perform sentiment analysis on the tweets that we found for that story. Since location is important for our application and for our users, we cluster the sentiment results by region. Figuring out where do the tweet authors live exactly is not trivial, since the majority of tweets does not contain location information. To solve this problem, we rely on the information that users share on their profile page. However, since that data is not structured at all, we have to reason about its text value and decide what region it represents. We do this using the Google Geocoding API\footnote{https://developers.google.com/maps/documentation/geocoding/}. 
 
+\section{Zilvinas Kucinskas individual part - sentiment analysis and visualization}
+
+\subsection{Rationale}
+
+Our application not only provides information about hot topics, but also analyzes Twitter posts with each topic. It uses Twitter API to get tweets to each topic. It analyses those tweets using Sentiment140\footnote{http://www.sentiment140.com/} analysis. Some other services use simple keyword based approach to analyse the tweets, but this one uses classifiers built from machine learning algorithms. It can provide both the aggregated sentiments or assesment of an individual tweet. Aggregated information is provided directly on the site using pie diagram, and it is possible to query the service to get data in JSON format. Our application splits tweets by country and provides visualisation using jVectorMap\footnote{http://jvectormap.com/}. This API provides capabilities to generate custom maps or use existing ones. We use world map to provide visualisation of sentiments.
+
+The main rationale behind this feature is providing users with approximation of the impact article gives user's globally. There is three variants of different opinions - positive, negative and neutral. Everytime application is refreshed - new tweets are gathered for each separate article and sentiment analysis is provided. 
+
+According to Wikipedia\footnote{http://en.wikipedia.org/wiki/Data\_visualization}, the main purpose of data visualization is to communicate information. Based on article "\textbf{Why is data visualization so hot?}" \footnote{http://blog.visual.ly/why-is-data-visualization-so-hot/}, humans are able to interpret information way better if they see it visually, because huge amount of data can be transmitted to the brains through the optic nerve. Usually it's hard to understand the data looking only to numbers, but using data visualisation it is possible to see patterns and trends in the data way easier and faster \cite{kaidi}.
+
+In my opinion, every text human reads could provide some impact on him, he may feel angry, scared, astonished, excited, neutral and so on. Usually, the more followers user has, the more it is influential to others. Sentiment analysis and visualisation feature provides our application users the opportunity to compare their sentiments to the ones in the Twitter social network. By splitting sentiments by country, we provide them the opportunity to find some patterns in the sentiment world map. Because each country has separate traditions and culture, people from different countriens feel differently about same topics. For example, occupation in Crimea is a really hot topic right now. By analysing sentiments, we were able to see that Russia has a positive sentiment regarding Crimea and for example France has more negative sentiment about it. So by having this information it is possible to make assumptions that Russia wants to occupy Crimea, and russian media is supporting it and that media from EU, France is against Crimea occupation. This can be shown in the Appendix figure \ref{screenshot:crimea}.
+
+\subsection{Motivation}
+
+Our application is oriented to people, who is interested in reading news articles, for users, who is keen to know what is happening around the world or in different domains of knowledge. By providing only pictures, videos and headline of an article, it is far more easier to search content to read. People can skim pages really fast and select which articles they want to read. They can also personalize their content by specifying which domain or regions he is interested in, also he has an opportunity to have several timelines. By clicking on specific article user gets redirected straight to the article in some online media source.
+
+\subsection{Scoping}
+
+Besides nice features our application also has some limitations. For example pictures and videos extracted from Bing could not always reflect the article, but we believe at least images and videos extracted directly from each online media source article is accurate. For example, there is a screenshot of an article in our application in this report Appendix figure \ref{screenshot:limitation}, which demonstrates this limitation. Also sentiment analysis could not be completely accurate. For example, tweets containing sarcasm can be evaluated completely opposite from it's initial sentiment. And almost always more than 50 percent tweets are evaluated as neutral. This is also a limitation, because variance between positive and negative sentiments is not so obvious.
+
+\subsection{Evaluation}
+
+How would you evaluate the success of your application (e.g. what metrics would you use, what would be an appropriate approach for evaluation and validation)?
+
+\subsection{Future work}
+
+How would you improve and further develop your application design if time  and efforts would permit?
+
+
 
 
 
@@ -98,6 +127,22 @@ In order to give the user an approximation about the impact of the story they ar
   \includegraphics[width=0.9\linewidth]{img/media-coverage-polynomial.png}
   \caption{Media coverage visualization (polynomial)}
   \label{screenshot:coverage}
+\end{figure}
+
+\ref{screenshot:crimea}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{img/crimea.png}
+  \caption{Sentiment analysis about crimea topics}
+  \label{screenshot:crimea}
+\end{figure}
+
+\ref{screenshot:limitation}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{img/limitation-ZK.png}
+  \caption{Screenshot demonstrating our worst scenario of extracting photos}
+  \label{screenshot:limitation}
 \end{figure}
 
 
