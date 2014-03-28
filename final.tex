@@ -13,9 +13,6 @@
 % e-mail address. Additionally, tag each line of
 % affiliation/address with \affaddr, and tag the
 %% e-mail address with \email.
-\alignauthor Arthur-Ervin Avramiea\\
-       \affaddr{2517642}\\
-       \email{a.e.avramiea@student.vu.nl}
 \alignauthor Mihnea Dobrescu-Balaur\\
 	\affaddr{2549278}\\
 	\email{mihnea@linux.com}
@@ -51,7 +48,13 @@ All the mentioned data sources and others (detailed in the Analysis section) get
 
 \section{Data analysis}
 
-In order to give the user an approximation about the impact of the story they are skimming, we use Sentiment140\footnote{http://www.sentiment140.com/} to perform sentiment analysis on the tweets that we found for that story. Since location is important for our application and for our users, we cluster the sentiment results by region. Figuring out where do the tweet authors live exactly is not trivial, since the majority of tweets does not contain location information. To solve this problem, we rely on the information that users share on their profile page. However, since that data is not structured at all, we have to reason about its text value and decide what region it represents. We do this using the Google Geocoding API\footnote{https://developers.google.com/maps/documentation/geocoding/}. 
+In order to give the user an approximation about the impact of the story they are skimming, we use Sentiment140\footnote{http://www.sentiment140.com/} to perform sentiment analysis on the tweets that we found for that story. Since location is important for our application and for our users, we group the sentiment results by region. Figuring out where do the tweet authors live exactly is not trivial, since the majority of tweets does not contain location information. To solve this problem, we rely on the information that users share on their profile page. However, since that data is not structured at all, we have to reason about its text value and decide what region it represents. We do this using the Google Geocoding API\footnote{https://developers.google.com/maps/documentation/geocoding/}. 
+
+We were interested to extend our application to allow the user to search for a topic, and then provide the user with summarized information about the news that are referenced in tweets, and the users' perception of the news. First of all, the application would display the most popular news articles on Tweeter, as well as the ones with negative or positive connotations. This allows the user to have a balanced view on the topic. An example summary of the search results for the topic 'Malaysia' is in Table \ref{table:summaryresults}. 
+
+Upon extraction of the urls from the tweets, we observed that there were subsets of urls covering different topics. We employed word clustering based on co-occurence of the words in tweets, and used code\footnote{https://github.com/danielpreotiuc/trendminer-clustering} from the trend-miner project\footnote{http://www.trendminer-project.eu/} for this. By using this approach, we can identify different subtopics related to the search topic - for example different events that have occured or will occur in Malaysia. A first cluster that came up when analyzing the tweets on the 'Malaysia' topic was Fig. \ref{screenshot:cluster1}, which relates to the search for data regarding the recent airplane accident. We used the techniques described in \footnote{http://www.trendminer-project.eu/images/d3.2.1.pdf} to assign the articles to the word clusters. A subset of these articles can be seen in \ref{table:linkscluster1}. Another cluster identified within the 'Malaysia' data is \ref{screenshot:cluster2}, which relates to the upcoming formula 1 event. A subset of the links related to this cluster are in \ref{table:linkscluster2}. We think this analysis would allow the user to browse through the subtopics related to a topic, judge the main theme from the world cloud, and browse through the identified articles. Overall, we want to provide the user with a global perspective on the searched topic. 
+
+However, due to time and technical constraints, we were not able to implement the topic search features. First of all, only for the data on the 'Malaysia' topic, we gathered data from the Tweet Streaming API over 12 hours, to have sufficient tweets for our analysis. Moreover, the trendminer clustering application is computation intensive, and requires Java and Matlab to be run. Nonetheless, if such an analysis would be feasible, we think it would provide an added value to the user news search.
 
 \section{Zilvinas Kucinskas individual part - sentiment analysis and visualization}
 
@@ -67,7 +70,7 @@ In my opinion, every text human reads could provide some impact on him, he may f
 
 \subsection{Motivation}
 
-Our application is oriented to people, who is interested in reading news articles, for users, who is keen to know what is happening around the world or in different domains of knowledge. By providing only pictures, videos and headline of an article, it is far more easier to search content to read. People can skim pages really fast and select which articles they want to read. They can also personalize their content by specifying which domain or regions he is interested in, also he has an opportunity to have several timelines. By clicking on specific article user gets redirected straight to the article in some online media source.
+Our application is oriented to people, who are interested in reading news articles, for users, who is keen to know what is happening around the world or in different domains of knowledge. By providing only pictures, videos and headline of an article, it is far more easier to search content to read. People can skim pages really fast and select which articles they want to read. They can also personalize their content by specifying which domain or regions he is interested in, also he has an opportunity to have several timelines. By clicking on specific article user gets redirected straight to the article in some online media source.
 
 \subsection{Scoping}
 
@@ -145,6 +148,66 @@ How would you improve and further develop your application design if time  and e
   \label{screenshot:limitation}
 \end{figure}
 
+\begin{table}[!ht]
+  \centering
+  \caption{Summary search results for the term 'Malayisia' - most referenced urls in tweets with the given search topic, and urls with most positive/negative connotations}
+    \label{table:summaryresults}
+    \begin{tabular}{| l | l | l |}
+	Source & Title & Count  \\ \hline
+	\textbf{Most popular tweets} & \multicolumn{2}{c}{}  \\ \hline 
+   masarif.in & Malaysia Airlines, Hilang atau 'Disembunyikan'? & 2667 tweets  \\ 
+   dailykeynews.com & Malaysia Flight 370 Hijacked: Investigation Officials Confirm & 400 tweets \\
+   dailykeynews.com & Startling Revelations about Malaysia Airlines flight MH370! & 265 tweets \\
+  \textbf{Positive connotation} & \multicolumn{2}{c}{} \\ \hline 
+   www.trending.co.ke & Malaysia Airlines ad &31\% tweets positive \\
+   dailymail.co.uk & Queen of Malaysia from enjoying a round of golf & 10\% tweets positive  \\ 
+   hai-online.com & KEMBALI MANGGUNG DI MALAYSIA, EPONK ... & 5.7\% tweets positive \\
+   \textbf{Negative connotation} & \multicolumn{2}{c}{} \\ \hline 
+   edition.cnn.com & Flight 370 search area shifts after 'credible lead' & 100\% tweets negative \\
+   bbc.com & Flight MH370: Bad weather again hampers plane search & 100\% tweets negative \\
+   abcnews.go.com & Search for Missing Malaysia Airlines Plane Shifts Northeast & 73\% tweets negative \\
+  \end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+  \centering
+  \caption{Tweeted links pertaining to cluster 1 (major topic - search for the plane)}
+    \label{table:linkscluster1}
+    \begin{tabular}{| l | l |}
+	Source & Title \\ \hline
+cbsnews.com & Malaysia Airlines Flight 370: China demands satellite data\\
+news.com.au & Thai satellite spots 300 objects possibly part of missing plane\\
+linkis.com & Data recorder batteries of Malaysia Airlines Flight 370 could already be dead\\
+  \end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+  \centering
+  \caption{Tweeted links pertaining to cluster 2 (major topic - Malaysia Ferrari 2014)}
+    \label{table:linkscluster}
+    \begin{tabular}{| l | l |}
+	Source & Title \\ \hline
+skysports.com & Sky Sports F1's ... look ahead to the Petronas Malaysia GP \\
+sidepodcast.com & Race information - Malaysia 2014\\
+formula1.com & Malaysia preview - teams set to feel the heat in Kuala Lumpur\\
+  \end{tabular}
+\end{table}
+
+\ref{screenshot:cluster1}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{img/cluster1.png}
+  \caption{Word cloud for cluster of tweets concerning Malaysia airplane crash}
+  \label{screenshot:limitation}
+\end{figure}
+
+\ref{screenshot:cluster2}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{img/cluster2.png}
+  \caption{Word cloud for cluster of tweets concerning upcoming Malaysia formula 1 competition}
+  \label{screenshot:limitation}
+\end{figure}
 
 
 % ***********************************************************************
