@@ -28,7 +28,30 @@
 \maketitle
 
 \section{Introduction}
-  
+
+With the rise in popularity of the Web, everybody around the world produces content, from local bloggers to global news agencies. This means that the online medium is now full of content, and that is great. The Web embodies diversity and pluralism in opinions, making sure that anybody can find useful content. However, with this much content available, it can be difficult for people to keep track of the items that interest them the most. And because of the decentralised nature of the Web, it can be difficult to find relevant articles.
+
+In order to solve these problems, websites started providing RSS\footnote{http://en.wikipedia.org/wiki/RSS} feeds and more advanced users have started following them. There are even online aggregators, like the recently closed Google Reader\footnote{http://www.google.com/reader/about/}, in which an user could add multiple RSS feeds that he or she is interested in, and then the website will keep track of new articles and display them in managed lists.
+
+The problem with RSS and aggregators like Google Reader is that they are not so user friendly, having a dense interface, similar to a full webmail inbox. Also, they display the articles in a plain way, with lots of text. This all adds up to an overload of information to the user. More recent applications, like Feedly\footnote{http://feedly.com/} and Flipboard\footnote{https://flipboard.com/}, have taken a fresh approach of the problem. They create rich, magazine-like layouts for the articles, and they also help with content discovery, having predefined and curated “feeds” that the users can subscribe to.
+
+We believe that we can take this idea a step further, and create a rich visual timeline, in which the media content (images and videos) take precedence over the text, removing everything but the headline. This timeline helps the users quickly get up to speed with the latest events and news from around the world, and when they find an article that is interesting, they can read it from the original source, with the original layout, in just one click.
+
+Since there is no such thing as one size fits all, our application allows users to select what regions they are interested in, as well as what domains. So, for example, one user might be interested in Politics around the US, while another user might be interested in Tech news from Asia. Personalising a timeline is easy, and a user can store multiple timelines on his or her account.
+
+\section{Structured data}
+
+Our application has to include articles from all over the world, on all possible topics, and to cover this demand we decided to use, first and foremost, the RSS feeds of the main news agencies in the world. Wikipedia provides a list\footnote{http://en.wikipedia.org/wiki/List_of_news_agencies} of them, grouped by country. Besides news agencies, we also include information from prominent newsletters like the New York Times\footnote{http://www.nytimes.com/} and online publications like The Verge\footnote{http://www.theverge.com}.
+
+Besides XML data (via RSS), we also use the Twitter API in order to get JSON data of the tweets related to any given article.
+
+To enrich the user’s visual experience, besides the media from the original article, we use the Bing search API to find relevant images and videos, that we then later embed in the rendered story.
+
+All the mentioned data sources and others (detailed in the Analysis section) get mixed in a pipeline that builds a JSON object representing the visual summary of the story that we want to render for the user. Then, using Web technologies we fetch the corresponding JSON files in the frontend application and render them, building the timeline.
+
+\section{Data analysis}
+
+In order to give the user an approximation about the impact of the story they are skimming, we use Sentiment140\footnote{http://www.sentiment140.com/} to perform sentiment analysis on the tweets that we found for that story. Since location is important for our application and for our users, we cluster the sentiment results by region. Figuring out where do the tweet authors live exactly is not trivial, since the majority of tweets does not contain location information. To solve this problem, we rely on the information that users share on their profile page. However, since that data is not structured at all, we have to reason about its text value and decide what region it represents. We do this using the Google Geocoding API\footnote{https://developers.google.com/maps/documentation/geocoding/}. 
 
 
 % The following two commands are all you need in the
@@ -47,7 +70,9 @@
 %                           SOME USEFUL EXAMPLES
 
 % Footnote && Caption
-% "\textbf{Where in the World Are the Hottest Social Networking Countries?}"\footnote{http://www.emarketer.com/Article/Where-World-Hottest-Social-Networking-Countries/1008870} by \textit{emarketer}
+% "\textbf{Where in the World Are the Hottest Social Networking Countries?}"
+% \footnote{http://www.emarketer.com/Article/Where-World-Hottest-Social-Networking-Countries/1008870}
+% \textit{emarketer}
 
 %CITATION
 %\citeA{mccombs1972agenda}
@@ -67,14 +92,14 @@
 % }
 % \end{verbatim}
 
-% FIGURES
-% \ref{fig:sentimentmap}
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[width=0.9\linewidth]{crimea_sentiment.png}
-% 	\caption{Sentiment analysis}
-% 	\label{fig:sentimentmap}
-% \end{figure}
+FIGURES
+\ref{screenshot:sentimentmap}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{crimea_sentiment.png}
+	\caption{Sentiment analysis}
+	\label{fig:sentimentmap}
+\end{figure}
 
 
 \end{document}
