@@ -1,5 +1,6 @@
 \documentclass{acm_proc_10ptArticle-sp}
 \usepackage[T1]{fontenc}
+\usepackage{listings}
 
 \begin{document}
 
@@ -86,6 +87,142 @@ Also it would be nice to gather user's preferences and which articles he chooses
 
 How would you improve and further develop your application design if time  and efforts would permit?
 
+
+\section{Mihnea Dobrescu-Balaur individual part}
+
+\section{Individual study of a feature - content discovery}
+
+In the following part of the report, we will discuss about \textbf{content discovery}, along with \textbf{clustering and correlation} by region, subject, tag etc.
+
+This includes the way that the news articles are first fetched, then filtered and categorized, taking into account the preferences and specifics of every user.
+
+The following sections will look at \textit{rationale} (the theory behind the feature and how it works), \textit{motivation} (why is this feature key to the application and how does it bring value to users), \textit{limitations} (and how they can be managed), \textit{evaluation} (metrics of quantifying the validation of the feature) and \textit{future work} (how could the application be improved).
+
+
+\section{Rationale}
+
+As presented in the introduction, the Web follows a decentralized model, having information floating everywhere around. Furthermore, the web started mostly \textit{schema-less}, meaning that even though the HTML markup has a structure and a syntax (that many authors don't respect 100\%), they don't provide any semantic value, making most of the content unstructured. More recent efforts, like schema.org\footnote{http://schema.org/} and microformats.org\footnote{http://microformats.org/} have tried to improve this situation, but there is still a long way to go.
+
+Because of this, finding specific information around the Web is a nontrivial task. This is why many online news aggregators have employees that manually find and filter articles.
+
+With our application, the intention is to completely automate this process. One way would be to use some very clever machine learning algorithms in order to come up with some classifiers that given a piece of content from the Web can decide what category it belongs to, in what geographic region the content is relevant, and (most importantly) if it is a quality article or not. Even though this approach is extremely interesting, it demands a large amount of resources (both in computing power and in human time), and it was not feasible for the scope of our project.
+
+The other way to solve this problem is to use the work already done by other such algorithms or people. It is worth mentioning that this approach is only possible thanks to the development of the Social Web, together with Linked Data\footnote{http://linkeddata.org/}, that allow for machine-based discovery of content online.
+
+The main data source for our applications are RSS feeds of news agencies (and other popular newspapers) around the world. RSS uses XML, and it makes use of semantic markup. Having an article in RSS format, it is easy to extract basic information like title, description and publish date. Some feeds, like the one from NY Times\footnote{http://www.nytimes.com} even provide categories in the markup, so we can know with no extra work that an article is, for example, about politics.
+
+We get the news agencies list from Wikipedia \footnote{http://en.wikipedia.org/wiki/List\_of\_news\_agencies}
+, and the other newspapers and websites are added by our own judgment. Because the list of news agencies is clustered by region, it is trivial to decide in what regions the articles we find are relevant. This implies that we have to trust the news agencies for sharing relevant articles, and it is an assumption that we accept.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=XML, frame=single, caption=Example RSS feed, breaklines=true, captionpos=b]
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+ <title>RSS Title</title>
+ <description>This is an example of an RSS feed</description>
+ <link>http://www.someexamplerssdomain.com/main.html</link>
+ <lastBuildDate>Mon, 06 Sep 2010 00:01:00 +0000 </lastBuildDate>
+ <pubDate>Mon, 06 Sep 2009 16:20:00 +0000 </pubDate>
+ <ttl>1800</ttl>
+ 
+ <item>
+  <title>Example entry</title>
+  <description>Here is some text containing an interesting description.</description>
+  <link>http://www.wikipedia.org/</link>
+  <guid>unique string per item</guid>
+  <pubDate>Mon, 06 Sep 2009 16:20:00 +0000 </pubDate>
+ </item>
+ 
+</channel>
+</rss>
+\end{lstlisting}
+\end{minipage}
+
+
+Thanks to the structured nature of the RSS feeds, we can find related articles, media and tweets using other APIs, like Bing search and Twitter search. We used Bing because it allows more queries for free than other competitors and that allowed us to experiment during development.
+
+The data source for our application stays updated thanks to the pipeline of operations that put in place (discovering content, processing it, enhancing it with media and tweets, performing sentiment analysis and rendering) that monitors the mentioned RSS feeds of the upstream content channels.
+
+It is worth mentioning that if we decide to add an extra type of data to the timeline, it is easy to plug it in into the existing architecture, thanks to the pipeline design.
+
+\section{Motivation}
+
+When choosing a theme for this assignment, we wanted to opt for an idea that would lead to a useful product, something that adds value to the modern day, always up to date, and always in a rush user. We thought about the benefits of the Social Web and of Linked Data, and we realized that one of the biggest benefits that are brought by this pair is enhanced knowledge. The World Wide Web is an enormous "place" that contains vast amounts of information, but finding the proper bits of information can be hard because of its big scale. The Social Web and Linked Data help in this problem because they empower search engine (and other automated tools) in partially understanding what items on the Web are about, what their semantics are.
+
+Having this in mind, we decided to try to come up with a way that improves the way people get up to speed with the latest events around the world. Some read newspapers, some talk to their coworkers and find out what is happening, and only a few other use online tools like RSS readers or aggregators like Flipboard. We feel that we can raise the number of people who make use of the benefits of the Social Web by creating a web application that solves the same problem as skimming through a few newspapers.
+
+The motivation for making this web application is that while not most people have really fast super smartphones or tablets or laptops, most people with access to technology also have Internet access, and so they can browse the Web. This meant that our application can reach a great number of people.
+
+The other big decision was going for a visual timeline, in contrast to the current options that, as shown in the introduction, rely more on text. We feel that humans are visual entities, and following the saying that a picture is worth a thousand words, we think that we can make the experience of going through news faster by relying more on images than on full-page text.
+
+We also decided not to affect the original content in any way, so when a user wants to read more about a story, we link them back to the original source. This is different than what other products do. For example, Flipboard creates a magazine layout out of the articles it aggregates. While the user experience is generally appealing, there are some times when the content doesn't properly fit the layout the application generates.
+
+We hope that all these decisions together make up an accessible and easy to use web application that people around the world can use to get up to date to the events that interest them, regardless of the digital platform they are using to access the Internet.
+
+\section{Limitations}
+
+In order to save time and come up with a working application within the given time constraints, we made some choices that both helped us reach our goal faster and introduced some limitations.
+
+The main limitation is the fact that we rely on other curated data sources, and that we don't do our own curation and discovery. This means that if a news agency that we trust releases some poor quality articles, we will also include them in the corresponding sections.
+
+Another issue is the fact that we do not show content from social (micro) blogging websites like Medium\footnote{http://www.medium.com} and Tumblr\footnote{http://www.tumblr.com}. Many times, there are great popular articles on platforms like these, that people actively follow. Because we lack in this area, our application ends up more in the "news" end of the content spectrum.
+
+It is worth mentioning that both limitations could be overcame, given enough time and resources. The first can be solved by using a custom classifier that could be built with an open source service such as Prediction.io\footnote{http://prediction.io/}. The second can be solved by just adding the RSS feeds of the mentioned services (both Medium and Tumblr provide RSS feeds), and writing some web scrapers for services that do not provide feeds.
+
+Extended user testing would probably reveal other issues, as long as potential fixes to them. However, given the time in which we developed and tested the prototype, the before mentioned facts were the main limitations that we encountered.
+
+\section{Evaluation}
+
+Considering the fact that our application is Web based, we think that the regular website analytics are a good fit.
+
+In this section, we will define the key metrics that are relevant for our evaluation, as well as explain why we chose them.
+
+The number of \textbf{unique visitors} is defined as the total number of people (counted only once) that have visited the website. There are multiple aspects that take part of this calculation, but in essence different visitors are tracked by elements IP addresses, session data and cookies. Google provides\footnote{https://support.google.com/analytics/answer/2992042?hl=en} more information on this subject. This is relevant in order to figure out how many people are interested in the application. A high number of unique visitors means that there is genuine interest and that the idea is a valid one, satisfying a need. This does not necessarily measure if the execution (the application itself) is any good, just that the idea is valid.
+
+The \textbf{average visit duration} is a measure in seconds of the total time a visitor spends on the website (regardless of the separate pages navigated). This is an approximated measure, but the technique was perfected over time, so it is reliable. This metric is relevant because it gives an idea about how the users interact with the website. A very low visit duration can be correlated with a high bounce rate (see below), and a very high visit duration can mean that information is hard to find. We don't know what the perfect balance is, but experimenting with the application and tracking the evolution of the average visit duration helps in improving the application's flow.
+
+Another relevant metric is the \textbf{return rate}. It shows what percentage of visitors come back to the website, in a given time interval. So if ten people visit the site today, and then five of them will visit it again tomorrow, then the return rate for this period was 50\%. This metric complements the unique visitors count and is extremely useful, showing if the users like the web application. If they do, they return to the website. It is a simple metric with a high reward.
+
+\textbf{Bounce rate} is defined as the percentage of visitors that just enter the website and leave. Because of the way current single page apps are set up, one could consider that the user of such an app never navigates to any page and such the site will have a high bounce rate. Current analyitcs tools have ways of avoiding this issue, in order to display relevant results. Wikipedia has more information\footnote{http://en.wikipedia.org/wiki/Bounce\_rate}. Studying bounce rate helps identifying visitors that are interested in the idea of the application (since they came to the page), but are not satisfied with the implementation and leave. Tracking the bounce rate helps in improving user retention.
+
+\textbf{Visitor demographics} data provides information about what the age, interest and region of the website users. This insight helps us in tweaking our regional-based content, by identifying problems like "the sports content in the US is sub-average", or "the technology content in Japan is liked by our users, maybe we can find a similar source for a different region".
+
+We believe that using the mentioned standard Website analytics metrics, we can track the evolution and user acquisition of the application. Common platforms like Google Analyitics\footnote{http://www.google.com/analytics/} offer the functionality we need at no cost. Also, implementing the tracking is easily done, by adding a small JavaScript snippet to the HTML code of the page.
+
+A different kind of evaluation that would be relevant after the application reaches a larger amount of users is the performance evaluation. This includes analyses like response time measurement and memory usage.
+
+The response time of a web application is important\footnote{http://www.nngroup.com/articles/response-times-3-important-limits/} in the user experience, since a website that takes too long to respond appears broken to users and they tend to leave.
+
+Memory usage becomes relevant when scaling out the application, in order to require a smaller amount of servers.
+
+However, we did not put strong accent on performance analysis in the beginning, since as long as there is not a large amount of users accessing the application, the response times are fast.
+
+\section{Future work}
+
+As mentioned in the Rationale section, the demonstrated application is a \textit{working prototype}, not close to the actual envisioned product. This was mainly because of the time and resources available at the moment. Even if we only developed a prototype, this has helped us realize what features are relevant and not, what limitations our idea has, and what we can do to improve it. There are a number of items that we would like to implement or improve, having the possibility.
+
+First of all, right now we manually run the data aggregator program and then we upload the generated JSON file to the web server so that it can be rendered in the timeline. We would like to set up an automatic batch job that fetches the latest data, processes it and then exposes it to the frontend via an accessible API.
+
+Adding more content types would also be helpful. For example, we think that adding videos alongside the images can enrich the users' experience. Another idea we have is to embed a few popular tweets about the given subjects into the timeline.
+
+Having the possibility of geotagging the tweets that we display, it would be useful to further improve the sentiment analysis part of the application in order to allow the users to better visualize sentiment about articles around the world, and also see the statistics clustered by sources and categories.
+
+At the moment, the Sentiment140\footnote{http://www.sentiment140.com/} API only supports English and Spanish, but our application targets people all around the world. We would like to improve the sentiment detection aspect in such a way that it would also support other languages. This could be done by using other services or by implementing a clever algorithm ourselves. An easy workaround would be to use the Twitter search API with the smileys support\footnote{https://dev.twitter.com/docs/using-search}, such that when looking for positive tweets we pass in ":)" and for negative tweets ":(".
+
+Right now, the prototype shows world news. Since the data already supports it, we would like to allow the users to select what region they care about and have the frontend filter out articles only relevant to that region. If requested, we could also look into supporting multiple regions.
+
+A similar approach can be done for categories, such that someone could set the timeline up so that they only see news about sports and technology.
+
+We would like to implement a login system, probably using other providers (like OpenID\footnote{http://openid.net/}), in order to allow the users to have a profile within our application. This would enable the possibility of other features, like personalization.
+
+Having a profile, users could personalize their timeline, for example by changing the theme, or the number and size of the thumbnails they want to see. Other settings like pagination, larger font size etc. can be added.
+
+Furthermore, supporting region and category filtering (as described above), a user could save a configured timeline such that the next time he or she logs in to our application, the same timeline is already there, waiting to be browsed. In addition, there could be added support for multiple such configured timelines.
+
+We know that we can't possibly include all the relevant news sources in the world, which is why another functionality that we think might be relevant is allowing the users to add their own data sources in the timelines. These can be saved per user profile, and if they lead to higher return rates, they could end up being shared between multiple users.
+
+All in all, the above mentioned features would provide a complete experience that would allow new users to find everything they need in our application, as well as have the necessary features in order to make it possible for users of other news aggregators to migrate to our platform.
 
 
 
