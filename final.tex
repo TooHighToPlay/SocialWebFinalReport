@@ -41,7 +41,7 @@ Since there is no such thing as one size fits all, our application allows users 
 
 \section{Structured data}
 
-Our application has to include articles from all over the world, on all possible topics, and to cover this demand we decided to use, first and foremost, the RSS feeds of the main news agencies in the world. Wikipedia provides a list\footnote{http://en.wikipedia.org/wiki/List_of_news_agencies} of them, grouped by country. Besides news agencies, we also include information from prominent newsletters like the New York Times\footnote{http://www.nytimes.com/} and online publications like The Verge\footnote{http://www.theverge.com}.
+Our application has to include articles from all over the world, on all possible topics, and to cover this demand we decided to use, first and foremost, the RSS feeds of the main news agencies in the world. Wikipedia provides a list\footnote{http://en.wikipedia.org/wiki/List\_of\_news\_agencies/} of them, grouped by country. Besides news agencies, we also include information from prominent newsletters like the New York Times\footnote{http://www.nytimes.com/} and online publications like The Verge\footnote{http://www.theverge.com}.
 
 Besides XML data (via RSS), we also use the Twitter API in order to get JSON data of the tweets related to any given article.
 
@@ -52,6 +52,8 @@ All the mentioned data sources and others (detailed in the Analysis section) get
 \section{Data analysis}
 
 In order to give the user an approximation about the impact of the story they are skimming, we use Sentiment140\footnote{http://www.sentiment140.com/} to perform sentiment analysis on the tweets that we found for that story. Since location is important for our application and for our users, we cluster the sentiment results by region. Figuring out where do the tweet authors live exactly is not trivial, since the majority of tweets does not contain location information. To solve this problem, we rely on the information that users share on their profile page. However, since that data is not structured at all, we have to reason about its text value and decide what region it represents. We do this using the Google Geocoding API\footnote{https://developers.google.com/maps/documentation/geocoding/}. 
+
+
 
 
 % The following two commands are all you need in the
@@ -92,14 +94,14 @@ In order to give the user an approximation about the impact of the story they ar
 % }
 % \end{verbatim}
 
-FIGURES
-\ref{screenshot:sentimentmap}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.9\linewidth]{crimea_sentiment.png}
-	\caption{Sentiment analysis}
-	\label{fig:sentimentmap}
-\end{figure}
+% FIGURES
+% \ref{screenshot:sentimentmap}
+% \begin{figure}[H]
+% 	\centering
+% 	\includegraphics[width=0.9\linewidth]{crimea_sentiment.png}
+% 	\caption{Sentiment analysis}
+% 	\label{fig:sentimentmap}
+% \end{figure}
 
 
 \end{document}
